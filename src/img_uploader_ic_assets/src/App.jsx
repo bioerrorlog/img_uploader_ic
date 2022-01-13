@@ -47,10 +47,10 @@ const App = () => {
             value={name}
             onChange={(ev) => setName(ev.target.value)}
           ></input>
-          <button onClick={doGreet}>Get Greeting!</button>
+          <button onClick={doGreet}>Upload</button>
         </div>
         <div>
-          Greeting is: "
+          Your Image: "
           <span style={{ color: "blue" }}>{message}</span>"
         </div>
       </div>
