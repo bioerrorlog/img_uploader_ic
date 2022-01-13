@@ -22,8 +22,6 @@ const App = () => {
   }
 
   const handleConnect = async () => {
-    setConnected(true);
-
     if (!window.ic.plug.agent) {
       const whitelist = [canisterId];
       await window.ic?.plug?.createAgent(whitelist);
@@ -36,14 +34,35 @@ const App = () => {
     });
 
     setActor(actor);
+    setConnected(true);
   }
+
+  useEffect(async () => {
+    if (!window.ic?.plug?.agent) {
+      setActor(false);
+      setConnected(false);
+      window.location.hash = '/connect';
+    }
+  }, []);
+
+  useEffect(async () => {
+    if (connected) {
+      const principal = await window.ic.plug.agent.getPrincipal();
+
+      if (principal) {
+        setPrincipalId(principal.toText());
+      }
+    } else {
+      window.location.hash = '/connect';
+    }
+  }, [connected]);
 
   return (
     <>
     <div className='app'>
       <div className="content">
         <img className='title-image' src={TitleImg} />
-        {connected ? 'Connected to plug' : (
+        {connected ? `Connected to plug: ${principalId}`: (
           <Connect handleConnect={handleConnect} />
         )}
         <div style={{ margin: "30px" }}>
