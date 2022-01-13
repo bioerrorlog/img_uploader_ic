@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 
-import { Connect } from './components';
+import Connect from './components/Connect';
 import TitleImg from '../assets/title-image.png';
 import { img_uploader_ic } from "../../declarations/img_uploader_ic";
 
