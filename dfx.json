@@ -5,9 +5,6 @@
       "type": "motoko"
     },
     "img_uploader_ic_assets": {
-      "dependencies": [
-        "img_uploader_ic"
-      ],
       "frontend": {
         "entrypoint": "src/img_uploader_ic_assets/src/index.html"
       },
