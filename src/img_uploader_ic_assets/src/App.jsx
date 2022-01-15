@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { HttpAgent } from "@dfinity/agent";
+import PlugConnect from '@psychedelic/plug-connect';
 
-import Connect from './components/Connect';
 import TitleImg from '../assets/title-image.png';
 import {
   img_uploader_ic,
@@ -15,21 +15,20 @@ const App = () => {
 
   const [connected, setConnected] = useState(false);
   const [principalId, setPrincipalId] = useState('');
-  const [actor, setActor] = useState('');
+  const [actor, setActor] = useState(false);
+
+  const whitelist = [canisterId];
+  const network = `http://${canisterId}.localhost:8000`;
 
   const doGreet = async () => {
     // const greeting = await actor.greet(name);
     const greeting = await img_uploader_ic.greet(name);
     setMessage(`${greeting} and ${principalId}`);
-    // setMessage(greeting);
   }
 
   const handleConnect = async () => {
 
     if (!window.ic.plug.agent) {
-      const whitelist = [canisterId];
-      const network = `http://${canisterId}.localhost:8000`;
-
       await window.ic?.plug?.createAgent({whitelist, network});
     }
 
@@ -75,7 +74,12 @@ const App = () => {
       <div className="content">
         <img className='title-image' src={TitleImg} />
         {connected ? `Connected to plug: ${principalId} / ${canisterId}`: (
-          <Connect handleConnect={handleConnect} />
+          <PlugConnect
+            host={network}
+            whitelist={whitelist}
+            dark
+            onConnectCallback={handleConnect}
+          />
         )}
         <div style={{ margin: "30px" }}>
           <input
