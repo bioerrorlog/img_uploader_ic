@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { HttpAgent } from "@dfinity/agent";
 
 import Connect from './components/Connect';
 import TitleImg from '../assets/title-image.png';
@@ -17,14 +18,19 @@ const App = () => {
   const [actor, setActor] = useState('');
 
   const doGreet = async () => {
+    // const greeting = await actor.greet(name);
     const greeting = await img_uploader_ic.greet(name);
-    setMessage(greeting);
+    setMessage(`${greeting} and ${principalId}`);
+    // setMessage(greeting);
   }
 
   const handleConnect = async () => {
+
     if (!window.ic.plug.agent) {
       const whitelist = [canisterId];
-      await window.ic?.plug?.createAgent(whitelist);
+      const network = `http://${canisterId}.localhost:8000`;
+
+      await window.ic?.plug?.createAgent({whitelist, network});
     }
 
     // Create an actor to interact with the basckend Canister
@@ -57,12 +63,18 @@ const App = () => {
     }
   }, [connected]);
 
+  useEffect(async () => {
+      if (process.env.DFX_NETWORK == "local") {
+        await window.ic.plug.agent.fetchRootKey();
+      };
+  }, []);
+
   return (
     <>
     <div className='app'>
       <div className="content">
         <img className='title-image' src={TitleImg} />
-        {connected ? `Connected to plug: ${principalId}`: (
+        {connected ? `Connected to plug: ${principalId} / ${canisterId}`: (
           <Connect handleConnect={handleConnect} />
         )}
         <div style={{ margin: "30px" }}>
@@ -75,7 +87,7 @@ const App = () => {
         </div>
         <div>
           Your Image: "
-          <span style={{ color: "blue" }}>{message}</span>"
+          <span>{message}</span>"
         </div>
       </div>
     </div>
