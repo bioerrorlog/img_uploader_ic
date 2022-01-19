@@ -1,3 +1,27 @@
+type Result_1 = 
+ variant {
+   err: Error;
+   ok: Image;
+ };
+type Result = 
+ variant {
+   err: Error;
+   ok;
+ };
+type Image = 
+ record {
+   data: blob;
+   fileName: text;
+   filetype: text;
+ };
+type Error = 
+ variant {
+   AlreadyExists;
+   NotAuthorized;
+   NotFound;
+ };
 service : {
+  download: () -> (Result_1);
   greet: (text) -> (text);
+  upload: (Image) -> (Result);
 }
