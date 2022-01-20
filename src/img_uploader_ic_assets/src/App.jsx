@@ -8,7 +8,7 @@ import {
   canisterId,
   idlFactory,
 } from "../../declarations/img_uploader_ic";
-import { img_uploader_ic_asset } from "../../declarations/img_uploader_ic_asset";
+import { img_uploader_ic_assets } from "../../declarations/img_uploader_ic_assets";
 
 const App = () => {
   const [image, setImage] = useState(null);
@@ -23,7 +23,7 @@ const App = () => {
   const whitelist = [canisterId];
   const network = `http://${canisterId}.localhost:8000`;
 
-  const createChunkDefault = async ({batch_id, chunk}) => img_uploader_ic_asset.create_chunk({
+  const createChunkDefault = async ({batch_id, chunk}) => img_uploader_ic_assets.create_chunk({
     batch_id,
     content: [...new Uint8Array(await chunk.arrayBuffer())]
   })
@@ -37,7 +37,8 @@ const App = () => {
       return;
     }
   
-    const {batch_id} = await img_uploader_ic_asset.create_batch();
+    console.log("before create_batch");
+    const {batch_id} = await img_uploader_ic_assets.create_batch({});
     console.log(batch_id);
   
     const promises = [];
@@ -53,7 +54,7 @@ const App = () => {
     const chunkIds = await Promise.all(promises);
     console.log(chunkIds);
   
-    await img_uploader_ic_asset.commit_batch({
+    await img_uploader_ic_assets.commit_batch({
       batch_id,
       chunk_ids: chunkIds.map(({chunk_id}) => chunk_id),
       content_type: image.type

@@ -33,7 +33,7 @@ actor {
         delete_asset: (DeleteAssetArguments) -> async ();
     };
 
-    stable var images : Trie.Trie<Principal, Images> = Trie.empty();
+    stable var images : Images = Trie.empty();
 
     public shared(msg) func upload (image: Image) : async Result.Result<(), Error> {
 
